@@ -2,6 +2,16 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.1.6] — 2026-10-19
+
+### Fixed
+
+- The declared DSH range no longer rejects DSH 0.2.x. Since 0.1.4 the three host packages were declared as `>=0.1.5-rc.2 <0.2.0`, and DSH's startup compatibility check compares the running version — not each package's own version — against every `@deepseek-ai/dsh-*` peer. On DSH 0.2.1-rc.2 all three requirements were unmet, so the profile loader put the bundle in `skippedBundles`: the plugin stayed installed, never mounted, and injected no rule. The range is now `>=0.1.5-rc.2 <0.3.0-0`; the `-0` ceiling admits 0.2.x prereleases (the check runs semver with `includePrerelease`) while still rejecting 0.3.0 and its prereleases, which remain untested.
+
+### Changed
+
+- Development pins track the harness this fix was verified against: `@deepseek-ai/dsh-llm`, `dsh-home-paths`, and `dsh-session` move to `0.2.1-rc.2`, with `@deepseek-ai/cordis` `^4.0.5` and `@deepseek-ai/schemastery` `^3.18.5`. The suite passes unchanged (49 tests): `boundContextSummary` / `createUserMessage` from `dsh-llm`, `dshHomeDisplay` / `resolveDshHome` from `dsh-home-paths`, and `Session.id` / `header` / `snapshotEvents()` are all still exported in 0.2.1-rc.2, so no runtime code needs to change.
+
 ## [0.1.5] — 2026-09-22
 
 ### Fixed
@@ -44,6 +54,8 @@ Initial release.
 - Per-session touched-path tracking (subagents included), resume-friendly snapshot restoration from the session log.
 - Versioned rule discovery and caching: edits to rule files take effect on the next agent step.
 - Standard DSH plugin bundle (`dsh.bundle` manifest with `cordis.patch.yml`) — installable via `dsh plugin --profile <name> add dsh-rules`.
+
+[0.1.6]: https://github.com/rj-jiangyichen/dsh-rules/releases/tag/v0.1.6
 
 [0.1.5]: https://github.com/rj-jiangyichen/dsh-rules/releases/tag/v0.1.5
 
